@@ -1,0 +1,22 @@
+body:before {
+  content: "%s";
+  white-space: pre-wrap;
+  font-family: Menlo, Monaco, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: white;
+  border: 3px solid red;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px #CCC;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  margin: 20px;
+  z-index: 10000;
+}
+
+body:hover:before {
+  z-index: 10001;
+}

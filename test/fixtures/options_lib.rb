@@ -1,0 +1,2 @@
+class OptionsLib
+end

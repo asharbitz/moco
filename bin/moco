@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'rubygems' unless defined? Gem
+require 'moco'
+
+MoCo::Application.monitor_compile_and_reload(ARGV)
