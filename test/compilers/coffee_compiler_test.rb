@@ -96,7 +96,7 @@ module MoCo
 
         it 'removes the filename and location from the original message' do
           message = error.error.message
-          assert message.start_with?('mock.coffee:1:9: error: parameter name')
+          assert message.start_with?('mock.coffee:1:9: parameter name')
 
           message = error.message
           assert message.start_with?('Parameter name')
@@ -105,9 +105,29 @@ module MoCo
         it 'marks the erroneous code with red (using ANSI escape codes)' do
           message = error.message.split("\n")
           assert_equal "evil = (\e[1;31meval\e[0m) ->", message[-2]
-          assert_equal "\e[1;31m        ^^^^\e[0m"    , message[-1]
+          assert_equal "        \e[1;31m^^^^\e[0m"    , message[-1]
         end
 
+      end
+
+    end
+
+    describe 'compile error with minimal location' do
+
+      let(:error) do
+        mock_compiler(CoffeeCompiler, '[').compile rescue $!
+      end
+
+      it 'captures the error location' do
+        assert_equal 1, error.line
+        assert_equal 2, error.column
+      end
+
+      specify 'the error message' do
+        message = error.message.split("\n")
+        assert_equal 'Missing ]',       message[0]
+        assert_equal "[\e[1;31m\e[0m",  message[1]
+        assert_equal " \e[1;31m^\e[0m", message[2]
       end
 
     end

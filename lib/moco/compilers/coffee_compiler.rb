@@ -53,9 +53,27 @@ module MoCo
     end
 
     def pretty_error_message(error)
-      return error.message unless error['location']
-      fn = 'CoffeeScript.helpers.prettyErrorMessage'
-      context.call(fn, error.error, source_file, source_text, true)
+      location = error['location']
+      return error.message unless location
+
+      line = location['first_line']
+      column = location['first_column']
+      code = source_text.split(/\n/)[line]
+
+      start = column
+      if line == (location['last_line'] || line)
+        stop = location['last_column'] || column
+        stop += 1
+      else
+        stop = code.length
+      end
+
+      message = error['message']
+      message = "#{source_file}:#{line + 1}:#{column + 1}: #{message}"
+      code[start...stop] = AnsiEscape.bold_red(code[start...stop])
+      mark = (' ' * start) + AnsiEscape.bold_red('^' * (stop - start))
+
+      [message, code, mark].join("\n")
     end
 
     def source_map_options(options)
